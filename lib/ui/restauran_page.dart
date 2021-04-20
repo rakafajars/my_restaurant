@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_restaurant/bloc/restaurant_bloc.dart';
 import 'package:my_restaurant/model/m_list_restaurant.dart';
 import 'package:my_restaurant/network/api_service.dart';
 import 'package:my_restaurant/provider/detail_restaurant_provider.dart';
-import 'package:my_restaurant/provider/restaurant_provider.dart';
-import 'package:my_restaurant/provider/result_state.dart';
 import 'package:my_restaurant/theme/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -17,86 +17,151 @@ class RestauranPage extends StatefulWidget {
 }
 
 class _RestauranPageState extends State<RestauranPage> {
+  RestaurantBloc _restaurantBloc;
+
+  @override
+  void initState() {
+    _restaurantBloc = BlocProvider.of<RestaurantBloc>(context);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _restaurantBloc.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Consumer<RestaurantProvider>(
-        builder: (context, state, _) {
-          if (state.state == ResultState.Loading) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state.state == ResultState.HasData) {
-            return SafeArea(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.only(
+                left: 20,
+                bottom: 20,
+              ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.only(
-                      left: 20,
-                      bottom: 20,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Restaurant',
-                          style: googlePoopinsHeader,
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Text(
-                          "Recommendation restauran for you!",
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w300,
-                            color: Colors.black38,
-                          ),
-                        ),
-                      ],
-                    ),
+                  Text(
+                    'Restaurant',
+                    style: googlePoopinsHeader,
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: state.modelListRestaurant.restaurants.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            /// Widget Body List Restauran
-                            _itemRestaurant(
-                              index,
-                              state.modelListRestaurant,
-                            ),
-                          ],
-                        );
-                      },
+                  SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    "Recommendation restauran for you!",
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.black38,
                     ),
                   ),
                 ],
               ),
-            );
-          } else if (state.state == ResultState.NoData) {
-            return Center(
-              child: Text(
-                state.message,
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                left: 31,
+                right: 31,
               ),
-            );
-          } else if (state.state == ResultState.Error) {
-            return Center(
-              child: Text(
-                state.message,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    16.0,
+                  ),
+                ),
               ),
-            );
-          } else {
-            return Center(
-              child: Text(''),
-            );
-          }
-        },
+              child: TextFormField(
+                onChanged: (newVal) {
+                  print(newVal);
+                  if (newVal.length >= 2) {
+                    _restaurantBloc
+                      ..add(SearchListRestaurantFromApi(search: newVal));
+                  } else if (newVal.isEmpty) {
+                    _restaurantBloc
+                      ..add(
+                        GetListRestaurantFromApi(),
+                      );
+                  }
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  prefixIcon: Icon(
+                    Icons.search_sharp,
+                    size: 14,
+                    color: Color(0xFF0F0F11).withOpacity(
+                      0.6,
+                    ),
+                  ),
+                  hintText: 'Cari Restaurant Favorit Kamu',
+                  hintStyle: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.black38,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            BlocBuilder<RestaurantBloc, RestaurantState>(
+              builder: (context, state) {
+                if (state is RestaurantLoadInProgress) {
+                  return Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                if (state is RestaurantLoadedSuccess) {
+                  return Expanded(
+                    child: state.modelListRestaurant.restaurants.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Restaurant Tidak Ada',
+                            ),
+                          )
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            itemCount:
+                                state.modelListRestaurant.restaurants.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  /// Widget Body List Restauran
+                                  _itemRestaurant(
+                                    index,
+                                    state.modelListRestaurant,
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                  );
+                }
+                if (state is RestaurantLoadedError) {
+                  return Expanded(
+                    child: Center(
+                      child: Text(
+                        state.message,
+                      ),
+                    ),
+                  );
+                }
+                return Container();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
