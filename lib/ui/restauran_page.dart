@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_restaurant/model/m_detail_restaurant.dart';
 import 'package:my_restaurant/model/m_list_restaurant.dart';
+import 'package:my_restaurant/provider/restaurant_provider.dart';
 import 'package:my_restaurant/theme/theme.dart';
 import 'package:my_restaurant/ui/detail_restaurant.dart';
+import 'package:provider/provider.dart';
 
 class RestauranPage extends StatefulWidget {
   @override
@@ -16,69 +18,106 @@ class _RestauranPageState extends State<RestauranPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ListView(
-        children: [
-          /// Widget Header
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.only(
-              left: 20,
-              bottom: 20,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Restaurant',
-                  style: googlePoopinsHeader,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  "Recommendation restauran for you!",
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.black38,
+      body: Consumer<RestaurantProvider>(
+        builder: (context, state, _) {
+          if (state.state == ResultState.Loading) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state.state == ResultState.HasData) {
+            return SafeArea(
+              child: Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.only(
+                      left: 20,
+                      bottom: 20,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Restaurant',
+                          style: googlePoopinsHeader,
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          "Recommendation restauran for you!",
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.black38,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-
-          /// Widget Body List Restauran
-          Column(
-            mainAxisSize: MainAxisSize.max,
-            children: List.generate(
-              listRestaurant.length,
-              (index) {
-                return _itemRestaurant(index);
-              },
-            ),
-          ),
-        ],
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: state.modelListRestaurant.restaurants.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            /// Widget Body List Restauran
+                            _itemRestaurant(
+                              index,
+                              state.modelListRestaurant,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else if (state.state == ResultState.NoData) {
+            return Center(
+              child: Text(
+                state.message,
+              ),
+            );
+          } else if (state.state == ResultState.Error) {
+            return Center(
+              child: Text(
+                state.message,
+              ),
+            );
+          } else {
+            return Center(
+              child: Text(''),
+            );
+          }
+        },
       ),
     );
   }
 
-  Widget _itemRestaurant(int index) {
+  Widget _itemRestaurant(
+    int index,
+    ModelListRestaurant modelListRestaurant,
+  ) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailRestaurant(
-              modelDetailRestaurant: ModelDetailRestaurant(
-                imagePath: '${listRestaurant[index].imagePath}',
-                nameRestaurant: '${listRestaurant[index].nameRestaurant}',
-                addressRestaurant: '${listRestaurant[index].addressRestaurant}',
-                rateRestaurant: listRestaurant[index].rateRestaurant,
-                detailRestaurant: '${listRestaurant[index].detailRestaurant}',
-              ),
-            ),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => DetailRestaurant(
+        //       modelDetailRestaurant: ModelDetailRestaurant(
+        //         imagePath: '${listRestaurant[index].imagePath}',
+        //         nameRestaurant: '${listRestaurant[index].nameRestaurant}',
+        //         addressRestaurant: '${listRestaurant[index].addressRestaurant}',
+        //         rateRestaurant: listRestaurant[index].rateRestaurant,
+        //         detailRestaurant: '${listRestaurant[index].detailRestaurant}',
+        //       ),
+        //     ),
+        //   ),
+        // );
       },
       child: Container(
         height: 100,
@@ -90,7 +129,7 @@ class _RestauranPageState extends State<RestauranPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Hero(
-              tag: listRestaurant[index].imagePath,
+              tag: modelListRestaurant.restaurants[index].pictureId,
               child: Container(
                 height: 80,
                 width: 80,
@@ -102,8 +141,8 @@ class _RestauranPageState extends State<RestauranPage> {
                     ),
                   ),
                   image: DecorationImage(
-                    image: AssetImage(
-                      '${listRestaurant[index].imagePath}',
+                    image: NetworkImage(
+                      'https://restaurant-api.dicoding.dev/images/large/${modelListRestaurant.restaurants[index].pictureId}',
                     ),
                     fit: BoxFit.cover,
                   ),
@@ -121,7 +160,7 @@ class _RestauranPageState extends State<RestauranPage> {
                 Container(
                   width: 245,
                   child: Text(
-                    '${listRestaurant[index].nameRestaurant}',
+                    '${modelListRestaurant.restaurants[index].name}',
                     style: googlePoopinsHeader,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -139,7 +178,7 @@ class _RestauranPageState extends State<RestauranPage> {
                       width: 4,
                     ),
                     Text(
-                      '${listRestaurant[index].addressRestaurant}',
+                      '${modelListRestaurant.restaurants[index].city}',
                       style: googlePoopinsSubHeader,
                     ),
                     SizedBox(
@@ -160,7 +199,7 @@ class _RestauranPageState extends State<RestauranPage> {
                       width: 4,
                     ),
                     Text(
-                      '4.6',
+                      modelListRestaurant.restaurants[index].rating.toString(),
                       style: googlePoopinsSubHeader.copyWith(
                         fontSize: 12,
                       ),

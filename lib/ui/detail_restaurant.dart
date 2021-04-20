@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_restaurant/model/m_detail_restaurant.dart';
-import 'package:my_restaurant/model/m_list_restaurant.dart';
 import 'package:my_restaurant/model/m_menu_restaurant.dart';
 import 'package:my_restaurant/theme/theme.dart';
 
@@ -12,6 +11,7 @@ class DetailRestaurant extends StatelessWidget {
     Key key,
     @required this.modelDetailRestaurant,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
