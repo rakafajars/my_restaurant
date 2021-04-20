@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_restaurant/model/m_detail_restaurant.dart';
 import 'package:my_restaurant/model/m_list_restaurant.dart';
+import 'package:my_restaurant/network/api_service.dart';
+import 'package:my_restaurant/provider/detail_restaurant_provider.dart';
 import 'package:my_restaurant/provider/restaurant_provider.dart';
+import 'package:my_restaurant/provider/result_state.dart';
 import 'package:my_restaurant/theme/theme.dart';
-import 'package:my_restaurant/ui/detail_restaurant.dart';
 import 'package:provider/provider.dart';
+
+import 'detail_restaurant.dart';
 
 class RestauranPage extends StatefulWidget {
   @override
@@ -104,20 +107,20 @@ class _RestauranPageState extends State<RestauranPage> {
   ) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => DetailRestaurant(
-        //       modelDetailRestaurant: ModelDetailRestaurant(
-        //         imagePath: '${listRestaurant[index].imagePath}',
-        //         nameRestaurant: '${listRestaurant[index].nameRestaurant}',
-        //         addressRestaurant: '${listRestaurant[index].addressRestaurant}',
-        //         rateRestaurant: listRestaurant[index].rateRestaurant,
-        //         detailRestaurant: '${listRestaurant[index].detailRestaurant}',
-        //       ),
-        //     ),
-        //   ),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+              create: (_) => DetailRestaurantProvider(
+                apiService: ApiService(),
+                idKey: modelListRestaurant.restaurants[index].id,
+              ),
+              child: DetailRestaurant(
+                pictureId: modelListRestaurant.restaurants[index].pictureId,
+              ),
+            ),
+          ),
+        );
       },
       child: Container(
         height: 100,

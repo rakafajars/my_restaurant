@@ -1,38 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:my_restaurant/model/m_list_restaurant.dart';
+import 'package:my_restaurant/model/m_detail_restaurant.dart';
 import 'package:my_restaurant/network/api_service.dart';
 import 'package:my_restaurant/provider/result_state.dart';
 
-class RestaurantProvider extends ChangeNotifier {
+class DetailRestaurantProvider extends ChangeNotifier {
   final ApiService apiService;
+  final String idKey;
 
-  ModelListRestaurant _modelListRestaurant;
+  ModelDetailRestaurant _modelDetailRestaurant;
   String _message = '';
   ResultState _state;
 
-  RestaurantProvider({@required this.apiService}) {
-    _getListRestaurant();
+  DetailRestaurantProvider({@required this.apiService, @required this.idKey}) {
+    _getListRestaurant(
+      idKey: idKey,
+    );
   }
 
   String get message => _message;
 
-  ModelListRestaurant get modelListRestaurant => _modelListRestaurant;
+  ModelDetailRestaurant get modelDetailRestaurant => _modelDetailRestaurant;
 
   ResultState get state => _state;
 
-  Future<dynamic> _getListRestaurant() async {
+  Future<dynamic> _getListRestaurant({
+    @required String idKey,
+  }) async {
     try {
       _state = ResultState.Loading;
       notifyListeners();
-      final listRestaurant = await apiService.getListRestaurant();
-      if (listRestaurant.restaurants.isEmpty) {
+      final detailRestaurant =
+          await apiService.getDetailRestaurant(idKey: idKey);
+      if (detailRestaurant.restaurant == null) {
         _state = ResultState.NoData;
         notifyListeners();
         return _message = 'Empty Data';
       } else {
         _state = ResultState.HasData;
         notifyListeners();
-        return _modelListRestaurant = listRestaurant;
+        return _modelDetailRestaurant = detailRestaurant;
       }
     } catch (e) {
       _state = ResultState.Error;
