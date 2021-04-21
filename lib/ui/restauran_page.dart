@@ -152,7 +152,7 @@ class _RestauranPageState extends State<RestauranPage> {
                   return Expanded(
                     child: Center(
                       child: Text(
-                        state.message,
+                        'Koneksi Tidak Ada, Silahkan Cek Kembali Koneksi Anda',
                       ),
                     ),
                   );
