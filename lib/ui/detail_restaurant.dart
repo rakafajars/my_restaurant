@@ -241,7 +241,7 @@ class DetailRestaurant extends StatelessWidget {
           } else if (state.state == ResultState.Error) {
             return Center(
               child: Text(
-                state.message,
+                                        'Koneksi Tidak Ada, Silahkan Cek Kembali Koneksi Anda',
               ),
             );
           } else {
