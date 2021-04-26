@@ -151,8 +151,24 @@ class _RestauranPageState extends State<RestauranPage> {
                 if (state is RestaurantLoadedError) {
                   return Expanded(
                     child: Center(
-                      child: Text(
-                        'Koneksi Tidak Ada, Silahkan Cek Kembali Koneksi Anda',
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Koneksi Tidak Ada, Silahkan Cek Kembali Koneksi Anda',
+                            maxLines: 1,
+                          ),
+                          RaisedButton(
+                            child: Text('Refresh'),
+                            onPressed: () {
+                              _restaurantBloc
+                                ..add(
+                                  GetListRestaurantFromApi(),
+                                );
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   );

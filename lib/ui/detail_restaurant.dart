@@ -211,6 +211,7 @@ class DetailRestaurant extends StatelessWidget {
                                         color: Colors.black38,
                                         fontWeight: FontWeight.w600,
                                       ),
+                                      maxLines: 1,
                                     ),
                                     Text(
                                       '${listMenuRestaurant[index].priceFood}',
@@ -219,6 +220,7 @@ class DetailRestaurant extends StatelessWidget {
                                         color: Colors.black38,
                                         fontWeight: FontWeight.w600,
                                       ),
+                                      maxLines: 1,
                                     )
                                   ],
                                 ),
@@ -234,14 +236,12 @@ class DetailRestaurant extends StatelessWidget {
             );
           } else if (state.state == ResultState.NoData) {
             return Center(
-              child: Text(
-                state.message,
-              ),
+              child: Text('Data Tidak Ada'),
             );
           } else if (state.state == ResultState.Error) {
             return Center(
               child: Text(
-                                        'Koneksi Tidak Ada, Silahkan Cek Kembali Koneksi Anda',
+                'Koneksi Tidak Ada, Silahkan Cek Kembali Koneksi Anda',
               ),
             );
           } else {
@@ -251,215 +251,6 @@ class DetailRestaurant extends StatelessWidget {
           }
         },
       ),
-      // body: SafeArea(
-      //   child: ListView(
-      //     padding: EdgeInsets.only(
-      //       bottom: 24,
-      //     ),
-      //     children: [
-      //       /// Header Image
-      //       Stack(
-      //         alignment: Alignment.topLeft,
-      //         children: [
-      //           Hero(
-      //             tag: modelDetailRestaurant.imagePath,
-      //             child: Container(
-      //               height: 250,
-      //               width: double.infinity,
-      //               decoration: BoxDecoration(
-      //                 color: Colors.red,
-      //                 borderRadius: BorderRadius.only(
-      //                   bottomRight: Radius.circular(
-      //                     8.0,
-      //                   ),
-      //                   bottomLeft: Radius.circular(
-      //                     8.0,
-      //                   ),
-      //                 ),
-      //                 image: DecorationImage(
-      //                   image: AssetImage(
-      //                     modelDetailRestaurant.imagePath,
-      //                   ),
-      //                   fit: BoxFit.cover,
-      //                 ),
-      //               ),
-      //             ),
-      //           ),
-      //           Positioned(
-      //             top: 20,
-      //             left: 10,
-      //             child: GestureDetector(
-      //               onTap: () {
-      //                 Navigator.pop(context);
-      //               },
-      //               child: Container(
-      //                 height: 40,
-      //                 width: 40,
-      //                 decoration: BoxDecoration(
-      //                     shape: BoxShape.circle, color: Colors.white),
-      //                 alignment: Alignment.center,
-      //                 child: Icon(
-      //                   Icons.arrow_back,
-      //                   size: 34,
-      //                   color: Colors.grey,
-      //                 ),
-      //               ),
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-      //       SizedBox(
-      //         height: 16,
-      //       ),
-      //
-      //       /// Informasi Restaurant
-      //       Container(
-      //         margin: EdgeInsets.only(
-      //           left: 20,
-      //           right: 20,
-      //         ),
-      //         child: Column(
-      //           mainAxisSize: MainAxisSize.max,
-      //           crossAxisAlignment: CrossAxisAlignment.start,
-      //           children: [
-      //             Text(
-      //               '${modelDetailRestaurant.nameRestaurant}',
-      //               style: googlePoopinsHeader,
-      //             ),
-      //             Row(
-      //               mainAxisSize: MainAxisSize.min,
-      //               children: [
-      //                 Icon(
-      //                   Icons.add_location,
-      //                   size: 12,
-      //                   color: Colors.grey,
-      //                 ),
-      //                 Text(
-      //                   modelDetailRestaurant.addressRestaurant,
-      //                   style: googlePoopinsSubHeader,
-      //                 ),
-      //               ],
-      //             ),
-      //             SizedBox(
-      //               height: 16,
-      //             ),
-      //
-      //             /// Detail Informasi Restaurant
-      //             Container(
-      //               width: double.infinity,
-      //               child: Text(
-      //                 modelDetailRestaurant.detailRestaurant,
-      //                 style: googlePoopinsSubHeader.copyWith(
-      //                   fontWeight: FontWeight.w500,
-      //                   fontSize: 16,
-      //                 ),
-      //                 textAlign: TextAlign.justify,
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //       SizedBox(
-      //         height: 24,
-      //       ),
-      //
-      //       Padding(
-      //         padding: EdgeInsets.only(
-      //           left: 20,
-      //         ),
-      //         child: Text(
-      //           "Menu Restaurant",
-      //           style: googlePoopinsHeader,
-      //         ),
-      //       ),
-      //
-      //       SizedBox(
-      //         height: 12,
-      //       ),
-      //
-      //       /// Menu Restaurant
-      //       Container(
-      //         height: 100,
-      //         width: double.infinity,
-      //         child: ListView.builder(
-      //           itemCount: listMenuRestaurant.length,
-      //           shrinkWrap: true,
-      //           padding: EdgeInsets.only(
-      //             left: 20,
-      //           ),
-      //           scrollDirection: Axis.horizontal,
-      //           itemBuilder: (context, int index) {
-      //             return Padding(
-      //               padding: const EdgeInsets.only(
-      //                 right: 16,
-      //               ),
-      //               child: Container(
-      //                 height: 100,
-      //                 width: 160,
-      //                 decoration: BoxDecoration(
-      //                   color: Colors.grey,
-      //                   borderRadius: BorderRadius.all(
-      //                     Radius.circular(
-      //                       8,
-      //                     ),
-      //                   ),
-      //                   image: DecorationImage(
-      //                     image: AssetImage(
-      //                       '${listMenuRestaurant[index].imagePath}',
-      //                     ),
-      //                     fit: BoxFit.cover,
-      //                   ),
-      //                 ),
-      //                 child: Align(
-      //                   alignment: Alignment.bottomLeft,
-      //                   child: Container(
-      //                     height: 40,
-      //                     width: 100,
-      //                     padding: EdgeInsets.only(
-      //                       left: 4,
-      //                     ),
-      //                     margin: EdgeInsets.only(
-      //                       bottom: 10,
-      //                       left: 8,
-      //                     ),
-      //                     decoration: BoxDecoration(
-      //                       color: Colors.white,
-      //                       borderRadius: BorderRadius.all(
-      //                         Radius.circular(8.0),
-      //                       ),
-      //                     ),
-      //                     child: Column(
-      //                       mainAxisSize: MainAxisSize.min,
-      //                       crossAxisAlignment: CrossAxisAlignment.start,
-      //                       children: [
-      //                         Text(
-      //                           '${listMenuRestaurant[index].nameFood}',
-      //                           style: googlePoopinsSubHeader.copyWith(
-      //                             fontSize: 12,
-      //                             color: Colors.black38,
-      //                             fontWeight: FontWeight.w600,
-      //                           ),
-      //                         ),
-      //                         Text(
-      //                           '${listMenuRestaurant[index].priceFood}',
-      //                           style: googlePoopinsSubHeader.copyWith(
-      //                             fontSize: 12,
-      //                             color: Colors.black38,
-      //                             fontWeight: FontWeight.w600,
-      //                           ),
-      //                         )
-      //                       ],
-      //                     ),
-      //                   ),
-      //                 ),
-      //               ),
-      //             );
-      //           },
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 }
