@@ -7,6 +7,7 @@ import 'package:my_restaurant/model/m_list_restaurant.dart';
 import 'package:my_restaurant/network/api_service.dart';
 import 'package:my_restaurant/provider/detail_restaurant_provider.dart';
 import 'package:my_restaurant/theme/theme.dart';
+import 'package:my_restaurant/ui/restaurant_favorite.dart';
 import 'package:provider/provider.dart';
 
 import 'detail_restaurant.dart';
@@ -35,35 +36,35 @@ class _RestauranPageState extends State<RestauranPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text(
+          'List Restaurant',
+          style: googlePoopinsHeader,
+          maxLines: 1,
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.bookmark,
+              color: Colors.grey,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RestaurantFavoritePage(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.only(
-                left: 20,
-                bottom: 20,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Restaurant',
-                    style: googlePoopinsHeader,
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    "Recommendation restauran for you!",
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.black38,
-                    ),
-                  ),
-                ],
-              ),
+            SizedBox(
+              height: 24,
             ),
             Container(
               margin: EdgeInsets.only(
@@ -110,7 +111,7 @@ class _RestauranPageState extends State<RestauranPage> {
               ),
             ),
             SizedBox(
-              height: 8,
+              height: 24,
             ),
             BlocBuilder<RestaurantBloc, RestaurantState>(
               builder: (context, state) {
