@@ -27,16 +27,15 @@ class RestaurantFavoritePage extends StatelessWidget {
         builder: (context, provider, child) {
           if (provider.state == ResultState.HasData) {
             return ListView.builder(
+              padding: EdgeInsets.only(
+                top: 24,
+              ),
               shrinkWrap: true,
               itemCount: provider.restaurant.length,
               itemBuilder: (context, int index) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 8,
-                    ),
-
                     /// Widget Body List Restauran
                     GestureDetector(
                       onTap: () {
@@ -48,9 +47,7 @@ class RestaurantFavoritePage extends StatelessWidget {
                                 apiService: ApiService(),
                                 idKey: provider.restaurant[index].id,
                               ),
-                              child: DetailRestaurant(
-                                pictureId: provider.restaurant[index].pictureId,
-                              ),
+                              child: DetailRestaurant(),
                             ),
                           ),
                         );
@@ -62,27 +59,23 @@ class RestaurantFavoritePage extends StatelessWidget {
                           left: 20,
                         ),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Hero(
-                              tag: provider.restaurant[index].pictureId,
-                              child: Container(
-                                height: 80,
-                                width: 80,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                      8,
-                                    ),
+                            Container(
+                              height: 80,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    8,
                                   ),
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                      'https://restaurant-api.dicoding.dev/images/large/${provider.restaurant[index].pictureId}',
-                                    ),
-                                    fit: BoxFit.cover,
+                                ),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    'https://restaurant-api.dicoding.dev/images/large/${provider.restaurant[index].pictureId}',
                                   ),
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
@@ -123,6 +116,17 @@ class RestaurantFavoritePage extends StatelessWidget {
                                     ),
                                   ],
                                 ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    provider.removeRestaurant(
+                                      provider.restaurant[index].id,
+                                    );
+                                  },
+                                )
                               ],
                             )
                           ],

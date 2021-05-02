@@ -51,11 +51,11 @@ class Restaurant {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "description": description,
+        "id": id == null ? null : id,
+        "name": name == null ? null : name,
+        "description": description == null ? null : description,
         "pictureId": pictureId,
-        "city": city,
-        "rating": rating,
+        "city": city == null ? null : city,
+        "rating": rating == null ? null : rating,
       };
 }

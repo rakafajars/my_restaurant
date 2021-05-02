@@ -8,6 +8,9 @@ import 'package:my_restaurant/network/api_service.dart';
 import 'package:my_restaurant/provider/detail_restaurant_provider.dart';
 import 'package:my_restaurant/theme/theme.dart';
 import 'package:my_restaurant/ui/restaurant_favorite.dart';
+import 'package:my_restaurant/ui/settings_page.dart';
+import 'package:my_restaurant/utils/background_service.dart';
+import 'package:my_restaurant/utils/notification_helper.dart';
 import 'package:provider/provider.dart';
 
 import 'detail_restaurant.dart';
@@ -19,16 +22,23 @@ class RestauranPage extends StatefulWidget {
 
 class _RestauranPageState extends State<RestauranPage> {
   RestaurantBloc _restaurantBloc;
+  final NotificationHelper _notificationHelper = NotificationHelper();
+  final BackgroundService _service = BackgroundService();
 
   @override
   void initState() {
     _restaurantBloc = BlocProvider.of<RestaurantBloc>(context);
+    port.listen((_) async => await _service.someTask());
+    _notificationHelper.configureSelectNotificlarrationSubject(
+      DetailRestaurant.routeName,
+    );
     super.initState();
   }
 
   @override
   void dispose() {
     _restaurantBloc.close();
+    selectNotificationSubject.close();
     super.dispose();
   }
 
@@ -54,6 +64,20 @@ class _RestauranPageState extends State<RestauranPage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => RestaurantFavoritePage(),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.timer,
+              color: Colors.grey,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SettingsPage(),
                 ),
               );
             },
@@ -197,9 +221,7 @@ class _RestauranPageState extends State<RestauranPage> {
                 apiService: ApiService(),
                 idKey: modelListRestaurant.restaurants[index].id,
               ),
-              child: DetailRestaurant(
-                pictureId: modelListRestaurant.restaurants[index].pictureId,
-              ),
+              child: DetailRestaurant(),
             ),
           ),
         );

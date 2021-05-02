@@ -8,9 +8,8 @@ import 'package:my_restaurant/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 class DetailRestaurant extends StatelessWidget {
-  final String pictureId;
+  static const routeName = '/restaurant_detal';
 
-  const DetailRestaurant({Key key, this.pictureId}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,27 +37,23 @@ class DetailRestaurant extends StatelessWidget {
                           Stack(
                             alignment: Alignment.topLeft,
                             children: [
-                              Hero(
-                                tag: pictureId,
-                                child: Container(
-                                  height: 250,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.only(
-                                      bottomRight: Radius.circular(
-                                        8.0,
-                                      ),
-                                      bottomLeft: Radius.circular(
-                                        8.0,
-                                      ),
+                              Container(
+                                height: 250,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(
+                                      8.0,
                                     ),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        'https://restaurant-api.dicoding.dev/images/large/$pictureId',
-                                      ),
-                                      fit: BoxFit.cover,
+                                    bottomLeft: Radius.circular(
+                                      8.0,
                                     ),
+                                  ),
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      'https://restaurant-api.dicoding.dev/images/medium/${state.modelDetailRestaurant.restaurant.pictureId}',
+                                    ),
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
